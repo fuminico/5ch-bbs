@@ -4,13 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
-    "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:seed": "pnpm exec tsx prisma/seed.ts",
-    "postinstall": "prisma generate"
+    "prisma:generate": "dotenv -- prisma generate",
+    "prisma:migrate": "dotenv -- prisma migrate dev",
+    "prisma:seed": "dotenv -- pnpm exec tsx prisma/seed.ts",
+    "postinstall": "dotenv -- prisma generate"
   },
   "dependencies": {
     "@prisma/client": "5.16.1",
@@ -31,6 +31,7 @@
     "@types/react": "18.2.66",
     "@types/react-dom": "18.2.22",
     "autoprefixer": "10.4.19",
+    "dotenv-cli": "^10.0.0",
     "eslint": "8.57.0",
     "eslint-config-next": "14.2.3",
     "postcss": "8.4.38",
