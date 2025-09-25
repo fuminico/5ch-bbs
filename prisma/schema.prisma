@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Board {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  description String?
+  activityAt  DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  threads Thread[]
+}
+
+model Thread {
+  id           String   @id @default(cuid())
+  boardId      String
+  title        String
+  body         String
+  authorName   String
+  authorTrip   String?
+  authorEmail  String?
+  lastBumpedAt DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  board Board @relation(fields: [boardId], references: [id])
+  posts Post[]
+
+  @@index([boardId, lastBumpedAt])
+}
+
+model Post {
+  id       String   @id @default(cuid())
+  threadId String
+  no       Int
+  name     String
+  trip     String?
+  email    String?
+  body     String
+  dayId    String
+  ipHash   String
+  uaHash   String
+  wasSaged Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  thread Thread @relation(fields: [threadId], references: [id])
+
+  @@unique([threadId, no])
+  @@index([threadId, createdAt])
+}
