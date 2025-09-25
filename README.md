@@ -1,48 +1,47 @@
-﻿# Anonymous BBS - Next.js Minimal Local Implementation
+# 匿名掲示板 - Next.jsによる最小限のローカル実装
 
-This repository contains a local-only anonymous bulletin board prototype built with Next.js (Pages Router), TypeScript, Tailwind CSS, shadcn/ui, Prisma, and SQLite. It implements the core anonymous flow described in `shiyou.md`: boards, threads, and posts with support for sage, tripcodes, day IDs, and a lightweight rate limiter.
+このリポジトリは、Next.js (Pages Router)、TypeScript、Tailwind CSS、shadcn/ui、Prisma、SQLiteで構築された、ローカル専用の匿名掲示板のプロトタイプです。`shiyou.md`に記述されている、板、スレッド、sage、トリップコード、ID、簡易的なレートリミットなどの主要な匿名掲示板のフローを実装しています。
 
-## Prerequisites
+## 前提条件
 
-- Node.js 18 or newer
-- pnpm 8 or newer
+- Node.js 18以降
+- pnpm 8以降
 
-## Setup
+## セットアップ
 
 ```bash
 pnpm install
 pnpm prisma generate
 npx prisma db push
-node scripts/seed.mjs   # optional seed data
+node scripts/seed.mjs   # オプションのシードデータ
 ```
 
-## Development Server
+## 開発サーバー
 
 ```bash
 pnpm dev
 ```
 
-Open http://localhost:3000 to browse the boards, create threads, and post replies.
+http://localhost:3000 を開くと、板の閲覧、スレッドの作成、返信の投稿ができます。
 
-## Features
+## 機能
 
-- Tailwind plus shadcn/ui styling with Framer Motion transitions
-- Boards, threads, and post views rendered with SSR and Prisma
-- Thread creation and replies with sage, tripcodes, day IDs, NG word filtering, and in-memory rate limiting
-- SWR-based auto refresh (toggle-friendly), Lucide icons, and motion-enhanced lists
+- Tailwindとshadcn/uiによるスタイリング、Framer Motionによるトランジション
+- SSRとPrismaによる板、スレッド、投稿の表示
+- sage、トリップコード、ID、NGワードフィルタリング、インメモリのレートリミットを備えたスレッド作成と返信機能
+- SWRによる自動更新（切り替え可能）、Lucideアイコン、モーション付きリスト
 
-## Directory Guide
+## ディレクトリガイド
 
-- `pages/` - Next.js pages and API routes
-- `components/ui/` - shadcn/ui-inspired reusable components
-- `lib/` - Prisma client, anonymous ID helpers, tripcode generator, rate limiter, NG-word list
-- `prisma/` - Prisma schema, migration, and seed scripts
-- `styles/` - Tailwind global stylesheet
+- `pages/` - Next.jsのページとAPIルート
+- `components/ui/` - shadcn/uiにインスパイアされた再利用可能なコンポーネント
+- `lib/` - Prismaクライアント、匿名IDヘルパー、トリップコードジェネレーター、レートリミッター、NGワードリスト
+- `prisma/` - Prismaスキーマ、マイグレーション、シードスクリプト
+- `styles/` - Tailwindのグローバルスタイルシート
 
-## Known Trade-offs
+## 既知のトレードオフ
 
-- Rate limiting and anonymous IDs are stored in-process for development only
-- Tripcode and day ID generation use cookies rather than raw IP or user agent hashing
-- Image uploads, CAPTCHA, external OGP previews, and advanced moderation are out of scope
-- Moderator endpoints rely on simple token checks and lack full authentication
-
+- レートリミットと匿名IDは開発用にインプロセスで保存されます
+- トリップコードとIDの生成には、IPやユーザーエージェントのハッシュ化ではなく、Cookieを使用しています
+- 画像のアップロード、CAPTCHA、外部リンクのOGPプレビュー、高度なモデレーション機能は対象外です
+- モデレーターエンドポイントは単純なトークンチェックに依存しており、完全な認証機能はありません
