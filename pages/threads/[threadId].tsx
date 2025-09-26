@@ -3,7 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import type { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { Loader2, ChevronLeft, Hash, Shield } from 'lucide-react';
+import { Loader2, ChevronLeft, Hash, Shield, CornerDownRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getThreadWithPosts } from '../../lib/queries';
 import { Button } from '../../components/ui/button';
@@ -41,7 +41,7 @@ function renderBody(body: string) {
       {paragraph.split('\n').map((line, lineIndex) => {
         const isQuote = /^>/.test(line.trim());
         return (
-          <span key={lineIndex} className={isQuote ? 'block text-sm text-primary' : undefined}>
+          <span key={lineIndex} className={isQuote ? 'block text-green-600' : undefined}>
             {line}
             {lineIndex < paragraph.split('\n').length - 1 ? <br /> : null}
           </span>
@@ -53,7 +53,7 @@ function renderBody(body: string) {
 
 export default function ThreadPage({ thread, posts }: Props) {
   const router = useRouter();
-  const [name, setName] = useState('Anonymous');
+  const [name, setName] = useState('名無しさん');
   const [email, setEmail] = useState('');
   const [body, setBody] = useState('');
   const [isSubmitting, setSubmitting] = useState(false);
@@ -63,7 +63,7 @@ export default function ThreadPage({ thread, posts }: Props) {
     event.preventDefault();
 
     if (!body.trim()) {
-      setError('Message is required.');
+      setError('本文を入力してください。');
       return;
     }
 
@@ -85,14 +85,14 @@ export default function ThreadPage({ thread, posts }: Props) {
       const payload = await response.json().catch(() => null);
 
       if (!response.ok) {
-        throw new Error(payload?.error ?? 'Unable to post reply.');
+        throw new Error(payload?.error ?? '返信の投稿に失敗しました。');
       }
 
       setBody('');
       await router.replace(router.asPath);
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err.message : 'Unable to post reply.');
+      setError(err instanceof Error ? err.message : '返信の投稿に失敗しました。');
     } finally {
       setSubmitting(false);
     }
@@ -101,41 +101,41 @@ export default function ThreadPage({ thread, posts }: Props) {
   return (
     <main className="space-y-10">
       <Head>
-        <title>{thread.title} | Anonymous BBS</title>
+        <title>{thread.title} | 匿名掲示板</title>
       </Head>
 
       <motion.section className="space-y-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}>
         <Link
           href={`/boards/${thread.boardSlug}`}
-          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary"
+          className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-primary transition-colors"
         >
-          <ChevronLeft className="h-4 w-4" /> Back to {thread.boardTitle}
+          <ChevronLeft className="h-4 w-4" /> {thread.boardTitle}へ戻る
         </Link>
         <h1 className="text-3xl font-semibold">{thread.title}</h1>
       </motion.section>
 
       <motion.section className="grid gap-6 lg:grid-cols-[minmax(0,560px)]" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-        <Card className="border-border/60 bg-secondary/30">
+        <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
-              <Shield className="h-5 w-5 text-primary" />
-              Reply to thread
+              <CornerDownRight className="h-5 w-5 text-primary" />
+              このスレッドに返信する
             </CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name (tripcodes supported)</Label>
+                  <Label htmlFor="name">名前 (トリップコード対応)</Label>
                   <Input id="name" value={name} onChange={(event) => setName(event.target.value)} maxLength={64} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Mail (sage keeps position)</Label>
+                  <Label htmlFor="email">メール (sageでスレ維持)</Label>
                   <Input id="email" value={email} onChange={(event) => setEmail(event.target.value)} maxLength={128} />
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="body">Message</Label>
+                <Label htmlFor="body">本文</Label>
                 <Textarea
                   id="body"
                   value={body}
@@ -149,7 +149,7 @@ export default function ThreadPage({ thread, posts }: Props) {
               <div className="flex justify-end">
                 <Button type="submit" disabled={isSubmitting} className="gap-2">
                   {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                  Post reply
+                  返信する
                 </Button>
               </div>
             </form>
@@ -159,30 +159,31 @@ export default function ThreadPage({ thread, posts }: Props) {
 
       <motion.section className="space-y-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <header className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Replies</h2>
-          <span className="text-xs text-muted-foreground">Day IDs rotate every 24h</span>
+          <h2 className="text-xl font-semibold">投稿一覧</h2>
+          <span className="text-xs text-muted-foreground">IDは24時間で変わります</span>
         </header>
         <div className="grid gap-4">
           {posts.map((post) => (
-            <Card key={post.id} className="border-border/60 bg-secondary/20">
+            <Card key={post.id} className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
               <CardHeader className="flex flex-col space-y-3">
-                <div className="flex flex-wrap items-center gap-3 text-sm">
-                  <span className="font-semibold text-primary">#{post.no}</span>
-                  <span className="font-medium">{post.name}</span>
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                  <span className="font-semibold text-primary">{post.no}</span>
+                  <span className="font-bold text-green-700">{post.name}</span>
                   {post.trip ? (
-                    <span className="inline-flex items-center gap-1 text-xs text-amber-200">
-                      <Hash className="h-3.5 w-3.5" />#{post.trip}
+                    <span className="inline-flex items-center gap-1 text-xs text-gray-500">
+                      <Hash className="h-3.5 w-3.5" />
+                      {post.trip}
                     </span>
                   ) : null}
+                  {post.email ? (
+                    <a href={`mailto:${post.email}`} className={`text-blue-600 hover:underline ${post.wasSaged ? 'font-bold text-gray-500' : ''}`}>
+                      {post.email}
+                    </a>
+                  ) : null}
+                  <span className="text-xs text-muted-foreground">{new Date(post.createdAt).toLocaleString('ja-JP')}</span>
                   <Badge variant="outline" className="border-primary/40 text-xs text-primary">
                     ID:{post.dayId}
                   </Badge>
-                  <span className="text-xs text-muted-foreground">{new Date(post.createdAt).toLocaleString()}</span>
-                  {post.email ? (
-                    <Badge variant="outline" className={post.wasSaged ? 'border-emerald-500/40 text-emerald-300' : ''}>
-                      {post.email}
-                    </Badge>
-                  ) : null}
                 </div>
               </CardHeader>
               <CardContent className="space-y-3 pt-0 text-sm">
@@ -191,9 +192,9 @@ export default function ThreadPage({ thread, posts }: Props) {
             </Card>
           ))}
           {posts.length === 0 ? (
-            <Card>
+            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
               <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                No replies yet.
+                まだ投稿がありません。
               </CardContent>
             </Card>
           ) : null}

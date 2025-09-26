@@ -19,7 +19,7 @@ export default function Home({ boards }: Props) {
   return (
     <main className="space-y-10">
       <Head>
-        <title>Anonymous BBS</title>
+        <title>匿名掲示板</title>
       </Head>
 
       <motion.section
@@ -28,12 +28,12 @@ export default function Home({ boards }: Props) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.2 }}
       >
-        <div className="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1 text-xs font-semibold uppercase tracking-wide text-secondary-foreground">
-          Preview Build
+        <div className="inline-flex items-center gap-2 rounded-full bg-white/80 backdrop-blur-sm px-4 py-1 text-xs font-semibold uppercase tracking-wide text-primary/80 border border-primary/10">
+          プロトタイプ
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">Anonymous BBS Prototype</h1>
+        <h1 className="text-3xl font-bold tracking-tight">匿名掲示板</h1>
         <p className="max-w-2xl text-sm text-muted-foreground">
-          A local-only playground that mirrors classic text boards: boards, threads, replies, sage, tripcodes, and rotating day IDs.
+          これは、昔ながらのテキスト掲示板を模した遊び場です。掲示板、スレッド、返信、sage、トリップコード、日替わりIDなどの機能を体験できます。
         </p>
       </motion.section>
 
@@ -45,21 +45,21 @@ export default function Home({ boards }: Props) {
       >
         <header className="flex items-center justify-between">
           <div className="space-y-1">
-            <h2 className="text-xl font-semibold">Boards</h2>
+            <h2 className="text-xl font-semibold">掲示板一覧</h2>
             <p className="text-sm text-muted-foreground">
-              Sorted by recent activity. Run <code>pnpm prisma:seed</code> for starter content.
+              最近活動があった順に表示されています。
             </p>
           </div>
         </header>
 
         <div className="grid gap-4">
           {boards.map((board) => (
-            <Card key={board.id} className="border-border/60 bg-secondary/40">
+            <Card key={board.id} className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm hover:shadow-md transition-shadow duration-300 rounded-xl">
               <CardHeader className="flex flex-row items-start justify-between">
                 <div className="space-y-2">
                   <CardTitle className="text-lg font-semibold">
-                    <Link href={`/boards/${board.slug}`} className="flex items-center gap-2 hover:text-primary">
-                      <MessageSquare className="h-4 w-4" />
+                    <Link href={`/boards/${board.slug}`} className="flex items-center gap-2 hover:text-primary transition-colors">
+                      <MessageSquare className="h-4 w-4 text-primary/70" />
                       {board.title}
                     </Link>
                   </CardTitle>
@@ -69,12 +69,12 @@ export default function Home({ boards }: Props) {
                     </CardDescription>
                   ) : null}
                 </div>
-                <Badge className="bg-primary/20 text-primary">Threads {board.threads}</Badge>
+                <Badge className="bg-primary/10 text-primary border-primary/20">スレッド {board.threads}</Badge>
               </CardHeader>
               <CardContent className="flex items-center justify-between pt-0 text-xs text-muted-foreground">
-                <span>Last activity {new Date(board.activityAt).toLocaleString()}</span>
-                <Link href={`/boards/${board.slug}`} className="inline-flex items-center gap-1 text-primary">
-                  View threads
+                <span>最終更新: {new Date(board.activityAt).toLocaleString('ja-JP')}</span>
+                <Link href={`/boards/${board.slug}`} className="inline-flex items-center gap-1 text-primary font-semibold">
+                  スレッド一覧へ
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </CardContent>
@@ -82,9 +82,9 @@ export default function Home({ boards }: Props) {
           ))}
 
           {boards.length === 0 ? (
-            <Card>
+            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
               <CardContent className="py-10 text-center text-sm text-muted-foreground">
-                No boards yet. Seed local data with <code>pnpm prisma:seed</code>.
+                まだ掲示板がありません。
               </CardContent>
             </Card>
           ) : null}
