@@ -17,6 +17,8 @@ model Board {
   updatedAt   DateTime @updatedAt
 
   threads Thread[]
+
+  @@map("boards")
 }
 
 model Thread {
@@ -35,6 +37,7 @@ model Thread {
   posts Post[]
 
   @@index([boardId, lastBumpedAt])
+  @@map("threads")
 }
 
 model Post {
@@ -55,4 +58,5 @@ model Post {
 
   @@unique([threadId, no])
   @@index([threadId, createdAt])
+  @@map("posts")
 }
