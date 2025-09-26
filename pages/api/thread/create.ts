@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../../lib/prisma';
 import { createDayId } from '../../../lib/dayId';
 import { parseTrip } from '../../../lib/tripcode';
 import { isRateLimited } from '../../../lib/rate-limit';
@@ -15,9 +15,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     res.setHeader('Allow', 'POST');
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
-
-  // Create a new PrismaClient instance for this request only.
-  const prisma = new PrismaClient();
 
   try {
     const { boardId, title, body, name, email } = req.body ?? {};
@@ -97,8 +94,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: 'スレッドの作成に失敗しました' });
-  } finally {
-    // Disconnect the PrismaClient instance after the request is handled.
-    await prisma.$disconnect();
   }
 }

@@ -6,18 +6,18 @@ async function main() {
   const boards = [
     {
       slug: 'news',
-      title: 'ƒjƒ…[ƒX‘¬•ñ',
-      description: 'ÅV‚Ìƒjƒ…[ƒX‚â˜b‘è‚ğ‹¤—L‚·‚é”Â‚Å‚·B',
+      title: 'ãƒ‹ãƒ¥ãƒ¼ã‚¹é€Ÿå ±',
+      description: 'æœ€æ–°ã®ãƒ‹ãƒ¥ãƒ¼ã‚¹ã«ã¤ã„ã¦èªã‚‹ã‚¹ãƒ¬ã§ã™ã€‚',
     },
     {
       slug: 'tech',
-      title: '‹ZpEƒvƒƒOƒ‰ƒ~ƒ“ƒO',
-      description: 'ƒvƒƒOƒ‰ƒ~ƒ“ƒO‚âŠJ”­’k‹`‚Í‚±‚¿‚çB',
+      title: 'æŠ€è¡“ãƒ»ãƒ—ãƒ­ã‚°ãƒ©ãƒŸãƒ³ã‚°',
+      description: 'ãƒ—ãƒ­ã‚°ãƒ©ãƒŸãƒ³ã‚°ã«é–¢ã™ã‚‹è­°è«–ã¯ã“ã¡ã‚‰ã€‚',
     },
     {
       slug: 'chat',
-      title: 'G’k',
-      description: '‚ä‚é‚¢˜b‘è‚ğŠ½Œ}‚µ‚Ü‚·B',
+      title: 'é›‘è«‡',
+      description: 'ãªã‚“ã§ã‚‚æ°—è»½ã«è©±ã—ã¾ã—ã‚‡ã†ã€‚',
     },
   ];
 
