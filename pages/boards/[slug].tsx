@@ -80,7 +80,7 @@ export default function BoardPage({ board, threads }: Props) {
   };
 
   return (
-    <main className="space-y-10">
+    <main className="space-y-10 py-12">
       <Head>
         <title>{board.title} | 匿名掲示板</title>
       </Head>
@@ -91,17 +91,17 @@ export default function BoardPage({ board, threads }: Props) {
         </Link>
         <div className="space-y-2">
           <h1 className="text-3xl font-semibold">{board.title}</h1>
-          {board.description ? <p className="text-sm text-muted-foreground">{board.description}</p> : null}
+          {board.description ? <p className="text-lg text-muted-foreground">{board.description}</p> : null}
         </div>
       </motion.section>
 
       <motion.section
-        className="grid gap-6 lg:grid-cols-[minmax(0,560px)]"
+        className="grid gap-6"
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.05 }}
       >
-        <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
+        <Card className="bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg rounded-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <MessagesSquare className="h-5 w-5 text-primary" />
@@ -152,35 +152,42 @@ export default function BoardPage({ board, threads }: Props) {
 
       <motion.section className="space-y-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <header className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">スレッド一覧</h2>
-          <Badge variant="outline" className="text-muted-foreground bg-white/80 backdrop-blur-sm border-white/20">
+          <h2 className="text-2xl font-semibold">スレッド一覧</h2>
+          <Badge variant="outline" className="text-muted-foreground bg-white/5 border-white/10">
             最大{THREAD_LIMIT}件表示
           </Badge>
         </header>
         <div className="grid gap-4">
-          {threads.map((thread) => (
-            <Card key={thread.id} className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm hover:shadow-md transition-shadow duration-300 rounded-xl">
-              <CardHeader className="flex flex-row items-start justify-between space-y-0">
-                <div className="space-y-2">
-                  <CardTitle className="text-lg">
-                    <Link href={`/threads/${thread.id}`} className="hover:text-primary transition-colors">
-                      {thread.title}
-                    </Link>
-                  </CardTitle>
-                </div>
-                <Badge className="bg-primary/10 text-primary border-primary/20">レス {thread.replies}</Badge>
-              </CardHeader>
-              <CardContent className="flex items-center justify-between pt-0 text-xs text-muted-foreground">
-                <span>最終更新: {new Date(thread.lastBumpedAt).toLocaleString('ja-JP')}</span>
-                <Link href={`/threads/${thread.id}`} className="inline-flex items-center gap-1 text-primary font-semibold">
-                  スレッドを開く
-                  <MessageCircle className="h-4 w-4" />
-                </Link>
-              </CardContent>
-            </Card>
+          {threads.map((thread, i) => (
+            <motion.div
+              key={thread.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
+            >
+              <Card className="bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg hover:border-white/20 transition-all duration-300">
+                <CardHeader className="flex flex-row items-start justify-between space-y-0">
+                  <div className="space-y-2">
+                    <CardTitle className="text-lg">
+                      <Link href={`/threads/${thread.id}`} className="hover:text-primary transition-colors">
+                        {thread.title}
+                      </Link>
+                    </CardTitle>
+                  </div>
+                  <Badge className="bg-primary/20 text-primary-foreground border-primary/30">レス {thread.replies}</Badge>
+                </CardHeader>
+                <CardContent className="flex items-center justify-between pt-0 text-xs text-muted-foreground">
+                  <span>最終更新: {new Date(thread.lastBumpedAt).toLocaleString('ja-JP')}</span>
+                  <Link href={`/threads/${thread.id}`} className="inline-flex items-center gap-1 text-primary font-semibold hover:underline">
+                    スレッドを開く
+                    <MessageCircle className="h-4 w-4" />
+                  </Link>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
           {threads.length === 0 ? (
-            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
+            <Card className="bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg">
               <CardContent className="py-10 text-center text-sm text-muted-foreground">
                 まだスレッドがありません。
               </CardContent>

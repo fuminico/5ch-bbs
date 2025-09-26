@@ -1,9 +1,9 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
-import { Loader2, ChevronLeft, Hash, Shield, CornerDownRight } from 'lucide-react';
+import { Loader2, ChevronLeft, Hash, CornerDownRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getThreadWithPosts } from '../../lib/queries';
 import { Button } from '../../components/ui/button';
@@ -41,7 +41,7 @@ function renderBody(body: string) {
       {paragraph.split('\n').map((line, lineIndex) => {
         const isQuote = /^>/.test(line.trim());
         return (
-          <span key={lineIndex} className={isQuote ? 'block text-green-600' : undefined}>
+          <span key={lineIndex} className={isQuote ? 'block text-green-400' : undefined}>
             {line}
             {lineIndex < paragraph.split('\n').length - 1 ? <br /> : null}
           </span>
@@ -99,7 +99,7 @@ export default function ThreadPage({ thread, posts }: Props) {
   };
 
   return (
-    <main className="space-y-10">
+    <main className="space-y-10 py-12">
       <Head>
         <title>{thread.title} | 匿名掲示板</title>
       </Head>
@@ -114,8 +114,8 @@ export default function ThreadPage({ thread, posts }: Props) {
         <h1 className="text-3xl font-semibold">{thread.title}</h1>
       </motion.section>
 
-      <motion.section className="grid gap-6 lg:grid-cols-[minmax(0,560px)]" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
-        <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
+      <motion.section className="grid gap-6" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+        <Card className="bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg rounded-xl">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg">
               <CornerDownRight className="h-5 w-5 text-primary" />
@@ -159,40 +159,47 @@ export default function ThreadPage({ thread, posts }: Props) {
 
       <motion.section className="space-y-4" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         <header className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">投稿一覧</h2>
+          <h2 className="text-2xl font-semibold">投稿一覧</h2>
           <span className="text-xs text-muted-foreground">IDは24時間で変わります</span>
         </header>
         <div className="grid gap-4">
-          {posts.map((post) => (
-            <Card key={post.id} className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
-              <CardHeader className="flex flex-col space-y-3">
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-                  <span className="font-semibold text-primary">{post.no}</span>
-                  <span className="font-bold text-green-700">{post.name}</span>
-                  {post.trip ? (
-                    <span className="inline-flex items-center gap-1 text-xs text-gray-500">
-                      <Hash className="h-3.5 w-3.5" />
-                      {post.trip}
-                    </span>
-                  ) : null}
-                  {post.email ? (
-                    <a href={`mailto:${post.email}`} className={`text-blue-600 hover:underline ${post.wasSaged ? 'font-bold text-gray-500' : ''}`}>
-                      {post.email}
-                    </a>
-                  ) : null}
-                  <span className="text-xs text-muted-foreground">{new Date(post.createdAt).toLocaleString('ja-JP')}</span>
-                  <Badge variant="outline" className="border-primary/40 text-xs text-primary">
-                    ID:{post.dayId}
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-3 pt-0 text-sm">
-                <div className="post-body space-y-3">{renderBody(post.body)}</div>
-              </CardContent>
-            </Card>
+          {posts.map((post, i) => (
+            <motion.div
+              key={post.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
+            >
+              <Card className="bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg">
+                <CardHeader className="flex flex-col space-y-3">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                    <span className="font-semibold text-primary">{post.no}</span>
+                    <span className="font-bold text-green-400">{post.name}</span>
+                    {post.trip ? (
+                      <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <Hash className="h-3.5 w-3.5" />
+                        {post.trip}
+                      </span>
+                    ) : null}
+                    {post.email ? (
+                      <a href={`mailto:${post.email}`} className={`text-cyan-400 hover:underline ${post.wasSaged ? 'font-bold text-muted-foreground' : ''}`}>
+                        {post.email}
+                      </a>
+                    ) : null}
+                    <span className="text-xs text-muted-foreground">{new Date(post.createdAt).toLocaleString('ja-JP')}</span>
+                    <Badge variant="outline" className="border-primary/40 text-xs text-primary">
+                      ID:{post.dayId}
+                    </Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3 pt-0 text-sm text-foreground/90">
+                  <div className="post-body space-y-3">{renderBody(post.body)}</div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
           {posts.length === 0 ? (
-            <Card className="bg-white/60 backdrop-blur-sm border-white/20 shadow-sm rounded-xl">
+            <Card className="bg-white/5 backdrop-blur-lg border border-white/10 shadow-lg">
               <CardContent className="py-10 text-center text-sm text-muted-foreground">
                 まだ投稿がありません。
               </CardContent>
