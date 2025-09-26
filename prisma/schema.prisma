@@ -8,7 +8,7 @@ datasource db {
 }
 
 model Board {
-  id          Uuid     @id @default(dbgenerated("gen_random_uuid()"))
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   slug        String   @unique
   title       String
   description String?
@@ -22,8 +22,8 @@ model Board {
 }
 
 model Thread {
-  id           Uuid     @id @default(dbgenerated("gen_random_uuid()"))
-  boardId      Uuid     @map("board_id")
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boardId      String   @map("board_id") @db.Uuid
   title        String
   body         String
   authorName   String   @map("author_name")
@@ -41,8 +41,8 @@ model Thread {
 }
 
 model Post {
-  id        Uuid     @id @default(dbgenerated("gen_random_uuid()"))
-  threadId  Uuid     @map("thread_id")
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  threadId  String   @map("thread_id") @db.Uuid
   no        Int
   name     String
   trip     String?
