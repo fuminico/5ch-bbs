@@ -23,7 +23,7 @@ model Board {
 
 model Thread {
   id           String   @id @default(cuid())
-  boardId      String
+  boardId      String   @map("board_id")
   title        String
   body         String
   authorName   String
@@ -42,7 +42,7 @@ model Thread {
 
 model Post {
   id       String   @id @default(cuid())
-  threadId String
+  threadId String   @map("thread_id")
   no       Int
   name     String
   trip     String?
